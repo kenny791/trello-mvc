@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from controllers.cards_controller import cards_bp
 import os
 
 db = SQLAlchemy()
@@ -12,9 +13,7 @@ def create_app():
 
     db.init_app(app)
 
-    @app.route('/')
-    def index():
-        return 'Hello World'
+    app.register_blueprint(cards_bp)
 
     return app
 
