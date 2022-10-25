@@ -4,11 +4,11 @@ from time import time
 from flask import Blueprint, request
 from init import db
 from models.card import Card, CardSchema
+from flask_jwt_extended import jwt_required
 
 cards_bp = Blueprint('cards', __name__, url_prefix='/cards')
 
 @cards_bp.route('/')
-# @jwt_required()
 def get_all_cards():
     # return 'All cards'
     # if not authorize():
@@ -27,6 +27,7 @@ def get_one_card(id):
         return {'error': f'Card not found with id {id}'}, 404
 
 @cards_bp.route('/<int:id>/', methods=['DELETE'])
+@jwt_required()
 def delete_one_card(id):
     stmt = db.select(Card).filter_by(id=id)
     card = db.session.scalar(stmt)
@@ -38,6 +39,7 @@ def delete_one_card(id):
         return {'error': f'Card not found with id {id}'}, 404
 
 @cards_bp.route('/<int:id>/', methods=['PUT', 'PATCH'])
+@jwt_required()
 def update_one_card(id):
     stmt = db.select(Card).filter_by(id=id)
     card = db.session.scalar(stmt)
@@ -52,6 +54,7 @@ def update_one_card(id):
         return {'error': f'Card not found with id {id}'}, 404
 
 @cards_bp.route('/', methods=['POST'])
+@jwt_required()
 def create_card():
     #Create a new Card model instance
     card = Card(
