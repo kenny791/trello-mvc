@@ -5,6 +5,7 @@ from flask import Blueprint, request
 from init import db
 from models.card import Card, CardSchema
 from flask_jwt_extended import jwt_required
+from controllers.auth_controller import authorize
 
 cards_bp = Blueprint('cards', __name__, url_prefix='/cards')
 
@@ -29,6 +30,8 @@ def get_one_card(id):
 @cards_bp.route('/<int:id>/', methods=['DELETE'])
 @jwt_required()
 def delete_one_card(id):
+    if not authorize():
+        return {'error': 'You must be an admin'}, 401
     stmt = db.select(Card).filter_by(id=id)
     card = db.session.scalar(stmt)
     if card:

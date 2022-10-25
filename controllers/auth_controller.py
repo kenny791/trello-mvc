@@ -3,7 +3,7 @@ from init import db, bcrypt
 from datetime import timedelta
 from models.user import User, UserSchema
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -37,3 +37,9 @@ def auth_login():
         return {'email': user.email, 'token': token, 'is_admin': user.is_admin} 
     else:
         return{'error': 'Invalid email or password'},401
+
+def authorize():
+    user_id = get_jwt_identity()
+    stmt = db.select(User).filter_by(id=user_id)
+    user = db.session.scalar(stmt)
+    return user.is_admin
