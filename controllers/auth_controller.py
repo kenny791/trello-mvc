@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from init import db, bcrypt
 from datetime import timedelta
 from models.user import User, UserSchema
@@ -42,4 +42,5 @@ def authorize():
     user_id = get_jwt_identity()
     stmt = db.select(User).filter_by(id=user_id)
     user = db.session.scalar(stmt)
-    return user.is_admin
+    if not user.is_admin:
+        abort(401)

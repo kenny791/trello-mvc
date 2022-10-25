@@ -30,8 +30,8 @@ def get_one_card(id):
 @cards_bp.route('/<int:id>/', methods=['DELETE'])
 @jwt_required()
 def delete_one_card(id):
-    if not authorize():
-        return {'error': 'You must be an admin'}, 401
+    authorize()
+
     stmt = db.select(Card).filter_by(id=id)
     card = db.session.scalar(stmt)
     if card:
