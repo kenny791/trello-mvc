@@ -26,6 +26,17 @@ def get_one_card(id):
     else:
         return {'error': f'Card not found with id {id}'}, 404
 
+@cards_bp.route('/<int:id>/', methods=['DELETE'])
+def delete_one_card(id):
+    stmt = db.select(Card).filter_by(id=id)
+    card = db.session.scalar(stmt)
+    if card:
+        db.session.delete(card)
+        db.session.commit()
+        return {'massage': f'Card "{card.title}" deleted successfully'}, 200
+    else:
+        return {'error': f'Card not found with id {id}'}, 404
+
 @cards_bp.route('/<int:id>/', methods=['PUT', 'PATCH'])
 def update_one_card(id):
     stmt = db.select(Card).filter_by(id=id)
