@@ -1,4 +1,6 @@
-from flask import Blueprint
+from datetime import date
+from time import time
+from flask import Blueprint, request
 from db import db
 from models.card import Card, CardSchema
 
@@ -22,3 +24,19 @@ def one_card(id):
         return CardSchema().dump(card)
     else:
         return {'error': f'Card not found with id {id}'}, 404
+
+@cards_bp.route('/', methods=['POST'])
+def create_card():
+    #Create a new Card model instance
+    card = Card(
+        title=request.json['title'],
+        description=request.json['description'],
+        date=date.today(),
+        status=request.json['status'],
+        priority=request.json['priority']
+    )
+    #Add and commit user to DB
+    db.session.add(card)
+    db.session.commit()
+    #Respond to client
+    return CardSchema().dump(card),201
