@@ -1,3 +1,4 @@
+from crypt import methods
 from datetime import date
 from time import time
 from flask import Blueprint, request
@@ -21,6 +22,20 @@ def get_one_card(id):
     stmt = db.select(Card).filter_by(id=id)
     card = db.session.scalar(stmt)
     if card:
+        return CardSchema().dump(card)
+    else:
+        return {'error': f'Card not found with id {id}'}, 404
+
+@cards_bp.route('/<int:id>/', methods=['PUT', 'PATCH'])
+def update_one_card(id):
+    stmt = db.select(Card).filter_by(id=id)
+    card = db.session.scalar(stmt)
+    if card:
+        card.title=request.json.get('title') or card.title
+        card.description=request.json.get('description') or card.description
+        card.status=request.json.get('status') or card.status
+        card.priority=request.json.get('priority') or card.priority
+        db.session.commit() #no 'db.session.add' required, as card already in table
         return CardSchema().dump(card)
     else:
         return {'error': f'Card not found with id {id}'}, 404
