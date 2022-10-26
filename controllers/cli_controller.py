@@ -42,7 +42,7 @@ def seed_db():
             status = 'To Do',
             priority = 'High',
             date = date.today(),
-            user_id = users[0].id
+            user = users[0]
         ),
         Card(
             title = "SQLAlchemy",
@@ -50,7 +50,7 @@ def seed_db():
             status = "Ongoing",
             priority = "High",
             date = date.today(),
-            user_id = users[0].id
+            user = users[0]
         ),
         Card(
             title = "ORM Queries",
@@ -58,7 +58,7 @@ def seed_db():
             status = "Ongoing",
             priority = "Medium",
             date = date.today(),
-            user_id = users[1].id
+            user = users[1]
         ),
         Card(
             title = "Marshmallow",
@@ -66,7 +66,7 @@ def seed_db():
             status = "Ongoing",
             priority = "Medium",
             date = date.today(),
-            user_id = users[1].id
+            user = users[1]
         )
     ]
 
