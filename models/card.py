@@ -1,7 +1,9 @@
 from init import db, ma
 from marshmallow import fields
-from marshmallow.validate import Length
+from marshmallow.validate import Length, OneOf
 
+VALID_PRIORITIES = ('Urgent', 'High', 'Medium', 'Low')
+VALID_STATUSES = ('To Do', 'Ongoing', 'Done', 'Testing', 'Deployed')
 
 class Card(db.Model):
     __tablename__ = 'cards'
@@ -22,6 +24,8 @@ class CardSchema(ma.Schema):
     user = fields.Nested('UserSchema', only=['name', 'email'])
     comments = fields.List(fields.Nested('CommentSchema', exclude=['card']))
     title = fields.String(required=True, validate=Length(min=2, error='Title must be at least 2 characters long'))
+    status = fields.String(required=True, validate=OneOf(VALID_STATUSES))
+    priority = fields.String(required=True, validate=OneOf(VALID_PRIORITIES))
 
     class Meta:
         fields = ('id', 'title', 'description', 'status', 'priority', 'date', 'user', 'comments')
