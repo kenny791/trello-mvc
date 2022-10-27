@@ -1,6 +1,6 @@
 from init import db, ma
 from marshmallow import fields
-from marshmallow.validate import Length, OneOf
+from marshmallow.validate import Length, OneOf, And, Regexp
 
 VALID_PRIORITIES = ('Urgent', 'High', 'Medium', 'Low')
 VALID_STATUSES = ('To Do', 'Ongoing', 'Done', 'Testing', 'Deployed')
@@ -23,7 +23,10 @@ class Card(db.Model):
 class CardSchema(ma.Schema):
     user = fields.Nested('UserSchema', only=['name', 'email'])
     comments = fields.List(fields.Nested('CommentSchema', exclude=['card']))
-    title = fields.String(required=True, validate=Length(min=2, error='Title must be at least 2 characters long'))
+    title = fields.String(required=True, validate=And(
+        Length(min=2, error='Title must be at least 2 characters long'),
+        Regexp('^[a-zA-Z0-9 ]+$', error='Only letters, numbers and spaces are allowed')
+        ))
     status = fields.String(required=True, validate=OneOf(VALID_STATUSES))
     priority = fields.String(required=True, validate=OneOf(VALID_PRIORITIES))
 
