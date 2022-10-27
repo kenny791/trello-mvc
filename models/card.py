@@ -27,7 +27,7 @@ class CardSchema(ma.Schema):
         Length(min=2, error='Title must be at least 2 characters long'),
         Regexp('^[a-zA-Z0-9 ]+$', error='Only letters, numbers and spaces are allowed')
         ))
-    status = fields.String(required=True, validate=OneOf(VALID_STATUSES))
+    status = fields.String(load_default=VALID_STATUSES[0], validate=OneOf(VALID_STATUSES))
     priority = fields.String(required=True, validate=OneOf(VALID_PRIORITIES))
 
     class Meta:
