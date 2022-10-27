@@ -21,7 +21,7 @@ class Card(db.Model):
 class CardSchema(ma.Schema):
     user = fields.Nested('UserSchema', only=['name', 'email'])
     comments = fields.List(fields.Nested('CommentSchema', exclude=['card']))
-    title = fields.String(required=True, validate=Length(min=2))
+    title = fields.String(required=True, validate=Length(min=2, error='Title must be at least 2 characters long'))
 
     class Meta:
         fields = ('id', 'title', 'description', 'status', 'priority', 'date', 'user', 'comments')
