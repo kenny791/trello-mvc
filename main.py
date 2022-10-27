@@ -8,6 +8,11 @@ import os
 def create_app():
     app = Flask(__name__)
 
+    @app.errorhandler(400)
+    def bad_request(err):
+        return {'error': str(err)}, 400
+
+
     #catches all 404 raised within app
     @app.errorhandler(404)
     def not_found(err):
