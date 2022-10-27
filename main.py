@@ -3,15 +3,19 @@ from init import db, ma, bcrypt, jwt
 from controllers.cards_controller import cards_bp
 from controllers.auth_controller import auth_bp
 from controllers.cli_controller import db_commands
+from marshmallow.exceptions import ValidationError
 import os
 
 def create_app():
     app = Flask(__name__)
 
+    @app.errorhandler(ValidationError)
+    def bad_request(err):
+        return {'error': err.messages}, 400
+
     @app.errorhandler(400)
     def bad_request(err):
         return {'error': str(err)}, 400
-
 
     #catches all 404 raised within app
     @app.errorhandler(404)
